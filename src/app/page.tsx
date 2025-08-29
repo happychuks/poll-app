@@ -1,29 +1,14 @@
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { BarChart3, Users, TrendingUp, Plus } from "lucide-react"
+import { Navigation } from "@/components/layout/Navigation"
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-2">
-              <BarChart3 className="w-8 h-8 text-blue-600" />
-              <h1 className="text-2xl font-bold text-gray-900">PollApp</h1>
-            </div>
-            <div className="flex space-x-4">
-              <Button variant="ghost" asChild>
-                <a href="/auth/login">Sign In</a>
-              </Button>
-              <Button asChild>
-                <a href="/auth/register">Sign Up</a>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Navigation />
 
       {/* Hero Section */}
       <section className="py-20 px-4">
@@ -37,13 +22,13 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <a href="/polls/create">
+              <Link href="/polls/create">
                 <Plus className="w-5 h-5 mr-2" />
                 Create Your First Poll
-              </a>
+              </Link>
             </Button>
             <Button variant="outline" size="lg" asChild>
-              <a href="/polls">Browse Polls</a>
+              <Link href="/polls">Browse Polls</Link>
             </Button>
           </div>
         </div>
@@ -108,10 +93,10 @@ export default function Home() {
             <CardContent>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="lg" asChild>
-                  <a href="/auth/register">Create Free Account</a>
+                  <Link href="/auth/register">Create Free Account</Link>
                 </Button>
                 <Button variant="outline" size="lg" asChild>
-                  <a href="/polls">Explore Polls</a>
+                  <Link href="/polls">Explore Polls</Link>
                 </Button>
               </div>
             </CardContent>
@@ -136,27 +121,27 @@ export default function Home() {
             <div>
               <h3 className="font-semibold mb-4">Product</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="/polls" className="hover:text-white">Browse Polls</a></li>
-                <li><a href="/polls/create" className="hover:text-white">Create Poll</a></li>
-                <li><a href="/dashboard" className="hover:text-white">Dashboard</a></li>
+                <li><Link href="/polls" className="hover:text-white">Browse Polls</Link></li>
+                <li><Link href="/polls/create" className="hover:text-white">Create Poll</Link></li>
+                <li><Link href="/dashboard" className="hover:text-white">Dashboard</Link></li>
               </ul>
             </div>
             
             <div>
               <h3 className="font-semibold mb-4">Account</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="/auth/login" className="hover:text-white">Sign In</a></li>
-                <li><a href="/auth/register" className="hover:text-white">Sign Up</a></li>
-                <li><a href="/auth/profile" className="hover:text-white">Profile</a></li>
+                <li><Link href="/auth/login" className="hover:text-white">Sign In</Link></li>
+                <li><Link href="/auth/register" className="hover:text-white">Sign Up</Link></li>
+                <li><Link href="/auth/profile" className="hover:text-white">Profile</Link></li>
               </ul>
             </div>
             
             <div>
               <h3 className="font-semibold mb-4">Support</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white">Help Center</a></li>
-                <li><a href="#" className="hover:text-white">Contact Us</a></li>
-                <li><a href="#" className="hover:text-white">Privacy Policy</a></li>
+                <li><Link href="#" className="hover:text-white">Help Center</Link></li>
+                <li><Link href="#" className="hover:text-white">Contact Us</Link></li>
+                <li><Link href="#" className="hover:text-white">Privacy Policy</Link></li>
               </ul>
             </div>
           </div>
