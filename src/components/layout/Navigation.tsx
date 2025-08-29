@@ -1,15 +1,22 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { BarChart3, Menu, X, User, LogOut } from "lucide-react"
+import { useAuth } from "@/contexts/AuthContext"
 
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isAuthenticated, setIsAuthenticated] = useState(false) // TODO: Replace with actual auth state
+  const { user, isAuthenticated, signOut } = useAuth()
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
+  }
+
+  const handleSignOut = async () => {
+    await signOut()
+    // The middleware will handle the redirect
   }
 
   return (
@@ -17,30 +24,34 @@ export function Navigation() {
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <a href="/" className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2">
             <BarChart3 className="w-8 h-8 text-blue-600" />
             <span className="text-2xl font-bold text-gray-900">PollApp</span>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <a href="/polls" className="text-gray-600 hover:text-gray-900 font-medium">
+            <Link href="/polls" className="text-gray-600 hover:text-gray-900 font-medium">
               Browse Polls
-            </a>
-            <a href="/polls/create" className="text-gray-600 hover:text-gray-900 font-medium">
-              Create Poll
-            </a>
+            </Link>
+            {isAuthenticated && (
+              <Link href="/polls/create" className="text-gray-600 hover:text-gray-900 font-medium">
+                Create Poll
+              </Link>
+            )}
             {isAuthenticated ? (
               <>
-                <a href="/dashboard" className="text-gray-600 hover:text-gray-900 font-medium">
+                <Link href="/dashboard" className="text-gray-600 hover:text-gray-900 font-medium">
                   Dashboard
-                </a>
+                </Link>
                 <div className="flex items-center space-x-4">
-                  <Button variant="ghost" size="sm">
-                    <User className="w-4 h-4 mr-2" />
-                    Profile
-                  </Button>
-                  <Button variant="outline" size="sm">
+                  <div className="flex items-center space-x-2">
+                    <User className="w-4 h-4 text-gray-500" />
+                    <span className="text-sm text-gray-700">
+                      {user?.user_metadata?.name || user?.email}
+                    </span>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={handleSignOut}>
                     <LogOut className="w-4 h-4 mr-2" />
                     Sign Out
                   </Button>
@@ -49,10 +60,10 @@ export function Navigation() {
             ) : (
               <div className="flex items-center space-x-4">
                 <Button variant="ghost" asChild>
-                  <a href="/auth/login">Sign In</a>
+                  <Link href="/auth/login">Sign In</Link>
                 </Button>
                 <Button asChild>
-                  <a href="/auth/register">Sign Up</a>
+                  <Link href="/auth/register">Sign Up</Link>
                 </Button>
               </div>
             )}
@@ -70,23 +81,27 @@ export function Navigation() {
         {isMenuOpen && (
           <div className="md:hidden mt-4 pb-4 border-t border-gray-200">
             <div className="flex flex-col space-y-4 pt-4">
-              <a href="/polls" className="text-gray-600 hover:text-gray-900 font-medium">
+              <Link href="/polls" className="text-gray-600 hover:text-gray-900 font-medium">
                 Browse Polls
-              </a>
-              <a href="/polls/create" className="text-gray-600 hover:text-gray-900 font-medium">
-                Create Poll
-              </a>
+              </Link>
+              {isAuthenticated && (
+                <Link href="/polls/create" className="text-gray-600 hover:text-gray-900 font-medium">
+                  Create Poll
+                </Link>
+              )}
               {isAuthenticated ? (
                 <>
-                  <a href="/dashboard" className="text-gray-600 hover:text-gray-900 font-medium">
+                  <Link href="/dashboard" className="text-gray-600 hover:text-gray-900 font-medium">
                     Dashboard
-                  </a>
+                  </Link>
                   <div className="flex flex-col space-y-2 pt-2 border-t border-gray-200">
-                    <Button variant="ghost" size="sm" className="justify-start">
-                      <User className="w-4 h-4 mr-2" />
-                      Profile
-                    </Button>
-                    <Button variant="outline" size="sm" className="justify-start">
+                    <div className="flex items-center space-x-2 py-2">
+                      <User className="w-4 h-4 text-gray-500" />
+                      <span className="text-sm text-gray-700">
+                        {user?.user_metadata?.name || user?.email}
+                      </span>
+                    </div>
+                    <Button variant="outline" size="sm" onClick={handleSignOut} className="justify-start">
                       <LogOut className="w-4 h-4 mr-2" />
                       Sign Out
                     </Button>
@@ -95,10 +110,10 @@ export function Navigation() {
               ) : (
                 <div className="flex flex-col space-y-2 pt-2 border-t border-gray-200">
                   <Button variant="ghost" asChild>
-                    <a href="/auth/login">Sign In</a>
+                    <Link href="/auth/login">Sign In</Link>
                   </Button>
                   <Button asChild>
-                    <a href="/auth/register">Sign Up</a>
+                    <Link href="/auth/register">Sign Up</Link>
                   </Button>
                 </div>
               )}
