@@ -1,11 +1,7 @@
-export interface User {
-  id: string
-  email: string
-  name: string
-  avatar?: string
-  createdAt: Date
-  updatedAt: Date
-}
+import { User as SupabaseUser } from '@supabase/supabase-js'
+
+// We'll use the Supabase User type directly since it already has user_metadata
+export type User = SupabaseUser
 
 export interface PollOption {
   id: string
