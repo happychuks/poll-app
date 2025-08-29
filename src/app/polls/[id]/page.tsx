@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useParams } from "next/navigation"
+import Link from "next/link"
 import { PollCard } from "@/components/polls/PollCard"
 import { Button } from "@/components/ui/button"
 import { Poll } from "@/types"
@@ -100,9 +101,9 @@ export default function PollDetailPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Poll not found</h1>
-          <p className="text-gray-600 mb-6">The poll you're looking for doesn't exist or has been removed.</p>
+          <p className="text-gray-600 mb-6">The poll you&apos;re looking for doesn&apos;t exist or has been removed.</p>
           <Button asChild>
-            <a href="/polls">Back to Polls</a>
+            <Link href="/polls">Back to Polls</Link>
           </Button>
         </div>
       </div>
@@ -114,10 +115,10 @@ export default function PollDetailPage() {
       <div className="max-w-2xl mx-auto">
         <div className="mb-6">
           <Button variant="ghost" asChild className="mb-4">
-            <a href="/polls">
+            <Link href="/polls">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Polls
-            </a>
+            </Link>
           </Button>
           
           <div className="flex justify-between items-start">
