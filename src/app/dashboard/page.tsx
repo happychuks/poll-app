@@ -1,11 +1,14 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
+import Link from "next/link"
 import { PollCard } from "@/components/polls/PollCard"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Poll } from "@/types"
 import { Plus, BarChart3, Users, TrendingUp } from "lucide-react"
+import { useAuth } from "@/contexts/AuthContext"
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute"
 
 // Mock data for demonstration
 const mockUserPolls: Poll[] = [
@@ -46,9 +49,10 @@ const mockUserPolls: Poll[] = [
   },
 ]
 
-export default function DashboardPage() {
-  const [polls, setPolls] = useState<Poll[]>(mockUserPolls)
+function DashboardContent() {
+  const [polls] = useState<Poll[]>(mockUserPolls)
   const [activeTab, setActiveTab] = useState<"overview" | "my-polls" | "voted">("overview")
+  const { user } = useAuth()
 
   const totalPolls = polls.length
   const activePolls = polls.filter(poll => poll.isActive).length
@@ -81,7 +85,9 @@ export default function DashboardPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600 mt-2">Manage your polls and track your activity</p>
+        <p className="text-gray-600 mt-2">
+          Welcome back, {user?.user_metadata?.name || user?.email}! Manage your polls and track your activity.
+        </p>
       </div>
 
       {/* Stats Cards */}
@@ -128,10 +134,10 @@ export default function DashboardPage() {
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold">Recent Activity</h2>
             <Button asChild>
-              <a href="/polls/create">
+              <Link href="/polls/create">
                 <Plus className="w-4 h-4 mr-2" />
                 Create Poll
-              </a>
+              </Link>
             </Button>
           </div>
           
@@ -167,20 +173,20 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <Button asChild className="w-full justify-start">
-                  <a href="/polls/create">
+                  <Link href="/polls/create">
                     <Plus className="w-4 h-4 mr-2" />
                     Create New Poll
-                  </a>
+                  </Link>
                 </Button>
                 <Button variant="outline" asChild className="w-full justify-start">
-                  <a href="/polls">
+                  <Link href="/polls">
                     Browse All Polls
-                  </a>
+                  </Link>
                 </Button>
                 <Button variant="outline" asChild className="w-full justify-start">
-                  <a href="/auth/profile">
+                  <Link href="/auth/profile">
                     Edit Profile
-                  </a>
+                  </Link>
                 </Button>
               </CardContent>
             </Card>
@@ -193,19 +199,19 @@ export default function DashboardPage() {
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold">My Polls</h2>
             <Button asChild>
-              <a href="/polls/create">
+              <Link href="/polls/create">
                 <Plus className="w-4 h-4 mr-2" />
                 Create Poll
-              </a>
+              </Link>
             </Button>
           </div>
           
           {polls.length === 0 ? (
             <Card>
               <CardContent className="text-center py-12">
-                <p className="text-gray-500 mb-4">You haven't created any polls yet.</p>
+                <p className="text-gray-500 mb-4">You haven&apos;t created any polls yet.</p>
                 <Button asChild>
-                  <a href="/polls/create">Create your first poll</a>
+                  <Link href="/polls/create">Create your first poll</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -225,17 +231,25 @@ export default function DashboardPage() {
 
       {activeTab === "voted" && (
         <div className="space-y-6">
-          <h2 className="text-xl font-semibold">Polls You've Voted On</h2>
+          <h2 className="text-xl font-semibold">Polls You&apos;ve Voted On</h2>
           <Card>
             <CardContent className="text-center py-12">
               <p className="text-gray-500 mb-4">No voting history yet.</p>
               <Button asChild>
-                <a href="/polls">Browse polls to vote</a>
+                <Link href="/polls">Browse polls to vote</Link>
               </Button>
             </CardContent>
           </Card>
         </div>
       )}
     </div>
+  )
+}
+
+export default function DashboardPage() {
+  return (
+    <ProtectedRoute>
+      <DashboardContent />
+    </ProtectedRoute>
   )
 }
