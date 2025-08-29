@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
+import Link from "next/link"
 import { PollCard } from "@/components/polls/PollCard"
 import { Button } from "@/components/ui/button"
 import { Poll } from "@/types"
@@ -89,10 +90,10 @@ export default function PollsPage() {
           <p className="text-gray-600 mt-2">Discover and vote on polls created by the community</p>
         </div>
         <Button asChild>
-          <a href="/polls/create">
+          <Link href="/polls/create">
             <Plus className="w-4 h-4 mr-2" />
             Create Poll
-          </a>
+          </Link>
         </Button>
       </div>
 
