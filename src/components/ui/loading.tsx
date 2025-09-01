@@ -20,3 +20,4 @@ export function Loading({ text = "Loading...", size = "md", className = "" }: Lo
     </div>
   )
 }
+
