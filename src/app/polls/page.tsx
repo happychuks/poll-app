@@ -142,6 +142,7 @@ export default function PollsPage() {
               poll={poll}
               onVote={handleVote}
               showResults={false}
+              showEditButton={true}
             />
           ))}
         </div>
