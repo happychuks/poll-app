@@ -4,9 +4,19 @@ import { useState, useEffect } from "react"
 import { useParams } from "next/navigation"
 import Link from "next/link"
 import { PollCard } from "@/components/polls/PollCard"
+import { EditPollForm } from "@/components/polls/EditPollForm"
 import { Button } from "@/components/ui/button"
 import { Poll } from "@/types"
-import { ArrowLeft, Share2 } from "lucide-react"
+import { ArrowLeft, Share2, Edit } from "lucide-react"
+
+interface UpdatedPollData {
+  title: string
+  description?: string
+  options: string[]
+  isPublic: boolean
+  allowMultipleVotes: boolean
+  expiresAt?: string
+}
 
 // Mock data for demonstration
 const mockPoll: Poll = {
@@ -33,6 +43,9 @@ export default function PollDetailPage() {
   const [poll, setPoll] = useState<Poll | null>(null)
   const [hasVoted, setHasVoted] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [isEditing, setIsEditing] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false)
 
   useEffect(() => {
     // TODO: Fetch poll data based on params.id
@@ -76,6 +89,52 @@ export default function PollDetailPage() {
       navigator.clipboard.writeText(window.location.href)
       alert("Link copied to clipboard!")
     }
+  }
+
+  const handleEdit = () => {
+    setIsEditing(true)
+  }
+
+  const handleSaveEdit = async (updatedPoll: UpdatedPollData) => {
+    setIsSaving(true)
+    
+    // TODO: Implement API call to update poll
+    console.log("Updating poll:", updatedPoll)
+    
+    // Simulate API call
+    setTimeout(() => {
+      if (poll) {
+        // Update local state with new data
+        const newOptions = updatedPoll.options.map((optionText, index) => ({
+          id: poll.options[index]?.id || `new-${index}`,
+          text: optionText,
+          votes: poll.options[index]?.votes || 0,
+          pollId: poll.id
+        }))
+
+        setPoll({
+          ...poll,
+          title: updatedPoll.title,
+          description: updatedPoll.description,
+          isPublic: updatedPoll.isPublic,
+          allowMultipleVotes: updatedPoll.allowMultipleVotes,
+          expiresAt: updatedPoll.expiresAt ? new Date(updatedPoll.expiresAt) : poll.expiresAt,
+          options: newOptions,
+          updatedAt: new Date()
+        })
+        
+        // Show success message
+        setShowSuccessMessage(true)
+        setTimeout(() => setShowSuccessMessage(false), 3000)
+      }
+      
+      setIsEditing(false)
+      setIsSaving(false)
+    }, 1000)
+  }
+
+  const handleCancelEdit = () => {
+    setIsEditing(false)
   }
 
   if (isLoading) {
@@ -135,25 +194,52 @@ export default function PollDetailPage() {
                 )}
               </div>
             </div>
-            <Button variant="outline" onClick={handleShare}>
-              <Share2 className="w-4 h-4 mr-2" />
-              Share
-            </Button>
+            <div className="flex gap-2">
+              {poll.isActive && (
+                <Button variant="outline" onClick={handleEdit}>
+                  <Edit className="w-4 h-4 mr-2" />
+                  Edit
+                </Button>
+              )}
+              <Button variant="outline" onClick={handleShare}>
+                <Share2 className="w-4 h-4 mr-2" />
+                Share
+              </Button>
+            </div>
           </div>
         </div>
         
-        <PollCard
-          poll={poll}
-          onVote={hasVoted ? undefined : handleVote}
-          showResults={hasVoted || !poll.isActive}
-        />
-        
-        {hasVoted && (
-          <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-green-800 text-sm">
-              ✓ Thank you for voting! You can see the results above.
-            </p>
-          </div>
+        {isEditing ? (
+          <EditPollForm
+            poll={poll}
+            onSave={handleSaveEdit}
+            onCancel={handleCancelEdit}
+            isLoading={isSaving}
+          />
+        ) : (
+          <>
+            <PollCard
+              poll={poll}
+              onVote={hasVoted ? undefined : handleVote}
+              showResults={hasVoted || !poll.isActive}
+            />
+            
+            {hasVoted && (
+              <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-green-800 text-sm">
+                  ✓ Thank you for voting! You can see the results above.
+                </p>
+              </div>
+            )}
+            
+            {showSuccessMessage && (
+              <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-green-800 text-sm">
+                  ✓ Poll updated successfully!
+                </p>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
