@@ -3,15 +3,17 @@
 import { Poll } from "@/types"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Vote } from "lucide-react"
+import { Vote, Edit } from "lucide-react"
+import Link from "next/link"
 
 interface PollCardProps {
   poll: Poll
   onVote?: (pollId: string, optionId: string) => void
   showResults?: boolean
+  showEditButton?: boolean
 }
 
-export function PollCard({ poll, onVote, showResults = false }: PollCardProps) {
+export function PollCard({ poll, onVote, showResults = false, showEditButton = false }: PollCardProps) {
   const totalVotes = poll.options.reduce((sum, option) => sum + option.votes, 0)
 
   const handleVote = (optionId: string) => {
@@ -23,15 +25,26 @@ export function PollCard({ poll, onVote, showResults = false }: PollCardProps) {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>{poll.title}</CardTitle>
-        {poll.description && (
-          <CardDescription>{poll.description}</CardDescription>
-        )}
-        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-          <span>{totalVotes} votes</span>
-          <span>{poll.isActive ? "Active" : "Closed"}</span>
-          {poll.expiresAt && (
-            <span>Expires: {new Date(poll.expiresAt).toLocaleDateString()}</span>
+        <div className="flex justify-between items-start">
+          <div className="flex-1">
+            <CardTitle>{poll.title}</CardTitle>
+            {poll.description && (
+              <CardDescription>{poll.description}</CardDescription>
+            )}
+            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+              <span>{totalVotes} votes</span>
+              <span>{poll.isActive ? "Active" : "Closed"}</span>
+              {poll.expiresAt && (
+                <span>Expires: {new Date(poll.expiresAt).toLocaleDateString()}</span>
+              )}
+            </div>
+          </div>
+          {showEditButton && poll.isActive && (
+            <Button variant="ghost" size="sm" asChild>
+              <Link href={`/polls/${poll.id}`}>
+                <Edit className="w-4 h-4" />
+              </Link>
+            </Button>
           )}
         </div>
       </CardHeader>
@@ -75,3 +88,4 @@ export function PollCard({ poll, onVote, showResults = false }: PollCardProps) {
     </Card>
   )
 }
+
